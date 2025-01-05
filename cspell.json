@@ -1,0 +1,34 @@
+// cSpell Settings
+// 확장프로그램 필수 설치 : https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker
+{
+    // Version of the setting file.  Always 0.2
+    "version": "0.2",
+    // language - current active spelling language
+    "language": "en",
+    // words - list of words to be always considered correct
+    "words": [
+        "usecase",
+        "golangci",
+        "bson",
+        "gonic",
+        "regist"
+    ],
+    // flagWords - list of words to be always considered incorrect
+    // This is useful for offensive words and common spelling errors.
+    "flagWords": [],
+    "ignorePaths": [
+        "logs/**",
+        ".vscode/**", //
+        ".git",
+        "vendor/**",
+        "conf/**",
+        ".history/**",
+        ".github/**",
+        "go.mod",
+        "go.sum",
+        ".golangci.yml",
+        ".gitattributes",
+        ".gitignore",
+        "static/**"
+    ]
+}
