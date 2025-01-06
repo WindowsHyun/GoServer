@@ -1,0 +1,49 @@
+[server]
+mode = ""
+port = ""
+version = ""
+
+[mongo.local]
+[mongo.local.app]
+Host = "mongodb://localhost:27017"
+User = "windowshyun"
+Pass = "hyun!"
+
+[mongo.local.api]
+Host = "mongodb://localhost:27017"
+User = "windowshyun"
+Pass = "hyun!"
+
+[mongo.local.common]
+Host = "mongodb://localhost:27017"
+User = "windowshyun"
+Pass = "hyun!"
+
+[mongo.develop]
+[mongo.develop.app]
+Host = "mongodb://192.168.6.16:27017"
+User = "windowshyun"
+Pass = "hyun!"
+
+[mongo.develop.api]
+Host = "mongodb://192.168.6.16:27017"
+User = "windowshyun"
+Pass = "hyun!"
+
+[mongo.develop.common]
+Host = "mongodb://192.168.6.16:27017"
+User = "windowshyun"
+Pass = "hyun!"
+
+[log]
+level = "debug" # debug or info
+fpath = "./logs" # 로그가 생성될 경로 : ./logs
+maxSize = 2000    # 2g : megabytes
+maxAge = 7        # 7days
+maxBackup = 7    # number of log files
+compress = false # backup compress
+
+[secretKey]
+APPSecretKey = "259238489399363557367989578295"
+APISecretKey = "653394399872486779676547347875"
+CommonSecretKey = "523543486863499536562376547399"

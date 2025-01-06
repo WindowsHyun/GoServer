@@ -7,6 +7,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/golang-jwt/jwt/v4 v4.5.1
+	github.com/joho/godotenv v1.5.1
 	go.mongodb.org/mongo-driver v1.17.1
 )
 

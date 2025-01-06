@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -26,10 +25,8 @@ func JWTMiddleware() gin.HandlerFunc {
 		}
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-			}
-			return []byte("your_secret_key"), nil
+			// 여기에 JWT 서명 키를 제공해야 합니다.
+			return []byte("your-256-bit-secret"), nil
 		})
 
 		if err != nil || !token.Valid {

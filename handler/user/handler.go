@@ -1,24 +1,18 @@
-package user
+package handler
 
 import (
 	"GoServer/usecase"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Handler struct {
+type UserHandler struct {
 	usecase *usecase.UserUsecase
 }
 
-func NewHandler(usecase *usecase.UserUsecase) *Handler {
-	return &Handler{usecase: usecase}
+func NewUserHandler(usecase *usecase.UserUsecase) *UserHandler {
+	return &UserHandler{usecase: usecase}
 }
 
-func (h *Handler) Register(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "User registered"})
-}
-
-func (h *Handler) Login(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "User logged in"})
+func (h *UserHandler) Register(c *gin.Context) {
 }

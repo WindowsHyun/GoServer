@@ -1,22 +1,21 @@
 package handler
 
 import (
-	"GoServer/handler/admin"
-	"GoServer/handler/user"
 	"GoServer/usecase"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UserHandler struct {
+	usecase *usecase.UserUsecase
 }
 
-func NewUserHandler() *user.Handler {
-	uc := usecase.NewUserUsecase()
-	return user.NewHandler(uc)
+func NewUserHandler(usecase *usecase.UserUsecase) *UserHandler {
+	return &UserHandler{usecase: usecase}
 }
 
-type AdminHandler struct {
+func (h *UserHandler) Register(c *gin.Context) {
 }
 
-func NewAdminHandler() *admin.Handler {
-	return admin.NewHandler()
+func (h *UserHandler) Login(c *gin.Context) {
 }
