@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(userHandler *handler.UserHandler) *gin.Engine {
+func SetupRouter(userHandler handler.UserHandler, appHandler handler.AppHandler) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
 
@@ -21,7 +21,7 @@ func SetupRouter(userHandler *handler.UserHandler) *gin.Engine {
 	// JWT 사용
 	auth := r.Group("/").Use(middleware.JWTMiddleware())
 	{
-		auth.GET("/admin/info")
+		auth.GET("/admin/info", appHandler.GetMenu)
 	}
 
 	return r

@@ -3,12 +3,9 @@ package main
 import (
 	"GoServer/config"
 	"GoServer/database/mongo"
-	"GoServer/handler"
-	"GoServer/repository"
-	"GoServer/router"
+	"GoServer/logger"
 	"GoServer/usecase"
 	"context"
-	"fmt"
 	"log"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -18,27 +15,33 @@ func main() {
 	ctx := context.Background()
 	cf := config.InitConfig()
 	if cf == nil {
-		fmt.Printf("init config failed\n")
+		log.Panic("init config failed\n")
 		return
 	}
 
-	if err := mongo.InitializeMongo(ctx, nil); err != nil {
-		log.Fatalf("Failed to initialize MongoDB clients: %v", err)
+	if err := logger.InitLogger(cf, "GoServer"); err != nil {
+		log.Panicf("init logger failed, err : %s\n", err.Error())
+		return
+	}
+
+	mongoRepo, err := mongo.InitializeMongo(ctx, cf)
+	if err != nil {
+		log.Panicf("Failed to initialize MongoDB clients: %v", err)
 	}
 	defer mongo.CloseMongo(ctx)
 
 	// Initialize repositories
-	repos := repository.NewRepositories()
+	// repos := repository.NewRepositories()
 
-	// Initialize use cases
-	userUsecase := usecase.NewUserUsecase(repos.User)
+	// Initialize usecase
+	usecase.InitUsecase(mongoRepo)
 
 	// Initialize handlers
-	userHandler := handler.NewUserHandler(userUsecase)
+	// userHandler := handler.NewUserHandler(userUsecase)
 
 	// Set up router
-	r := router.SetupRouter(userHandler)
+	// r := router.SetupRouter(userHandler)
 
 	// Start the server
-	log.Fatal(r.Run(":8080"))
+	// log.Fatal(r.Run(":8080"))
 }

@@ -1,7 +1,6 @@
 package mongo
 
 import (
-	"GoServer/config"
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -9,8 +8,8 @@ import (
 )
 
 type MongoInterface interface {
-	Connect(conf *config.Config) (map[string]MongoInterface, error)
-	Client() *mongo.Client
+	GetClient() *mongo.Client
+	GetCollection() *mongo.Collection
 	IsExist(ctx context.Context, query interface{}) (bool, error)
 	Insert(ctx context.Context, doc interface{}) error
 	Delete(ctx context.Context, query interface{}) error
@@ -21,7 +20,7 @@ type MongoInterface interface {
 	GetData(ctx context.Context, query interface{}, field string, result interface{}) error
 	GetProjectionData(ctx context.Context, query interface{}, projection interface{}, field string, result interface{}) error
 	GetMultiplePartitionData(ctx context.Context, query interface{}, skip int, limit int, result interface{}) error
-	CreateTTLIndex(ctx context.Context, fieldName string, expireAfterSeconds int) error
+	CreateTTLIndex(ctx context.Context, fieldName string, expireAfterSeconds int32) error
 	DropTTLIndex(ctx context.Context, fieldName string) error
 	FindOne(ctx context.Context, query interface{}, projection interface{}, result interface{}) error
 	UpdateMany(ctx context.Context, filter interface{}, update interface{}) (*mongo.UpdateResult, error)

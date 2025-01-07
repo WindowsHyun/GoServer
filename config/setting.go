@@ -24,7 +24,7 @@ func InitConfig() *Config {
 }
 
 func SettingConfig(target string) *Config {
-	confPath := flag.String("config", "./default.toml", "toml file to use for configuration")
+	confPath := flag.String("config", "./config/default.toml", "toml file to use for configuration")
 	cf := DefaultLoadConfig(*confPath)
 
 	return cf
