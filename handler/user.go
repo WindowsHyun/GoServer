@@ -15,9 +15,9 @@ type userHandler struct {
 	userUsecase usecase.UserUsecase
 }
 
-func NewUserHandler(userUsecase usecase.UserUsecase) UserHandler {
+func NewUserHandler(usecase *usecase.Usecase) UserHandler {
 	return &userHandler{
-		userUsecase: userUsecase,
+		userUsecase: usecase.UserUsecase,
 	}
 }
 

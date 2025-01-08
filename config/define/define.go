@@ -23,6 +23,19 @@ const (
 	MongoCommon = "common"
 )
 
+// Redis DB
+const (
+	RedisUserDB    = "0"
+	RedisRankingDB = "1"
+	RedisItemDB    = "2"
+	RedisGuildDB   = "3"
+	RedisLogDB     = "4"
+	RedisEventDB   = "5"
+	RedisCacheDB   = "6"
+	RedisTempDB    = "7"
+	RedisBackupDB  = "8"
+)
+
 const (
 	FolderPermission = 0755
 	FilePermission   = 0660

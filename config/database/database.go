@@ -5,12 +5,28 @@ import (
 	"GoServer/config/structure"
 )
 
-// "CollectionName": {DatabaseLocation, "DatabaseName", "CollectionName", []string{"HashKey"}, define.IndexTypeSingle},
 var MongoCollectionInfos = map[string]structure.MongoCollectionInfo{
-	"UserInfo": {define.DBCommon, "User", "info", []string{"email"}, define.IndexTypeSingle},
+	"UserInfo": {
+		DatabaseLocation: define.DBCommon,
+		DatabaseName:     "User",
+		CollectionName:   "info",
+		HashKey:          []string{"email"},
+		IndexType:        define.IndexTypeSingle,
+	},
+	"Menu": {
+		DatabaseLocation: define.DBCommon,
+		DatabaseName:     "Menu",
+		CollectionName:   "info",
+		HashKey:          []string{"name"},
+		IndexType:        define.IndexTypeSingle,
+	},
 }
 
 var MySQLCollectionInfos = map[string]structure.MySQLCollectionInfo{
-	"UserTable": {"user_table"},
-	"Menu":      {"menu"},
+	"UserTable": {
+		TableName: "user_table",
+	},
+	"Menu": {
+		TableName: "menu",
+	},
 }

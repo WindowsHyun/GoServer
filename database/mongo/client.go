@@ -130,9 +130,6 @@ func CreateIndex(ctx context.Context, repo *MongoRepository) error {
 		if _, err := repo.Collection.Indexes().DropAll(ctx); err != nil {
 			return fmt.Errorf("drop existing indexes: %w", err)
 		}
-		fmt.Println("Existing indexes dropped.")
-	} else {
-		fmt.Println("No existing indexes found. Skipping drop operation.")
 	}
 
 	if _, err := repo.Collection.Indexes().CreateMany(ctx, indexModels); err != nil {

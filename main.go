@@ -5,7 +5,9 @@ import (
 	"GoServer/database/mongo"
 	"GoServer/database/mysql"
 	"GoServer/database/redis"
+	"GoServer/handler"
 	"GoServer/logger"
+	"GoServer/router"
 	"GoServer/usecase"
 	"context"
 	"log"
@@ -26,34 +28,43 @@ func main() {
 
 	mongoRepo, err := mongo.Initialize(ctx, cf)
 	if err != nil {
-		log.Panicf("Failed to initialize MongoDB clients: %v", err)
+		logger.LogPanic(ctx, "Failed to initialize MongoDB clients: %v", err)
+		return
 	}
 	defer mongo.Close(ctx)
 
 	mysqlRepo, err := mysql.Initialize(ctx, cf)
 	if err != nil {
-		log.Panicf("Failed to initialize MySQL clients: %v", err)
+		logger.LogPanic(ctx, "Failed to initialize MySQL clients: %v", err)
+		return
 	}
 	defer mysql.Close(ctx)
 
 	redisRepo, err := redis.Initialize(ctx, cf)
 	if err != nil {
-		log.Panicf("Failed to initialize Redis clients: %v", err)
+		logger.LogPanic(ctx, "Failed to initialize Redis clients: %v", err)
+		return
 	}
 	defer redis.Close(ctx)
 
-	// Initialize repositories
-	// repos := repository.NewRepositories()
-
 	// Initialize usecase
-	usecase.InitUsecase(mongoRepo, mysqlRepo, redisRepo)
+	usecase, err := usecase.InitUsecase(cf, mongoRepo, mysqlRepo, redisRepo)
+	if err != nil {
+		logger.LogPanic(ctx, "Failed to initialize usecase: %v", err)
+		return
+	}
 
 	// Initialize handlers
-	// userHandler := handler.NewUserHandler(userUsecase)
+	userHandler := handler.NewUserHandler(usecase)
+	appHandler := handler.NewAppHandler(usecase)
 
 	// Set up router
-	// r := router.SetupRouter(userHandler)
+	r := router.SetupRouter(userHandler, appHandler)
 
 	// Start the server
-	// log.Fatal(r.Run(":8080"))
+	err = r.Run(":" + cf.GetServer().Port)
+	if err != nil {
+		logger.LogPanic(ctx, "Failed to start server: %v", err)
+		return
+	}
 }

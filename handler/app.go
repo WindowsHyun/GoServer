@@ -14,9 +14,9 @@ type AppHandler interface {
 	GetMenu(c *gin.Context)
 }
 
-func NewAppHandler(appUsecase usecase.AppUsecase) AppHandler {
+func NewAppHandler(usecase *usecase.Usecase) AppHandler {
 	return &appHandler{
-		appUsecase: appUsecase,
+		appUsecase: usecase.AppUsecase,
 	}
 }
 
