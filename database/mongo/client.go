@@ -25,7 +25,7 @@ type MongoRepository struct {
 	IndexType      int
 }
 
-func InitializeMongo(ctx context.Context, config *config.Config) (map[string]MongoInterface, error) {
+func Initialize(ctx context.Context, config *config.Config) (map[string]MongoInterface, error) {
 	appSvrCfg := config.GetMongo(define.MongoApp)
 	apiSvrCfg := config.GetMongo(define.MongoApi)
 	commonSvrCfg := config.GetMongo(define.MongoCommon)
@@ -56,7 +56,7 @@ func InitializeMongo(ctx context.Context, config *config.Config) (map[string]Mon
 		}
 		Clients = append(Clients, client)
 
-		for key, colInfo := range database.CollectionInfos {
+		for key, colInfo := range database.MongoCollectionInfos {
 			if colInfo.DatabaseLocation == fieldKey {
 				repo, err := CreateDBRepository(ctx, client, colInfo.DatabaseName, colInfo.CollectionName, colInfo.HashKey, colInfo.IndexType)
 				if err != nil {
@@ -141,7 +141,7 @@ func CreateIndex(ctx context.Context, repo *MongoRepository) error {
 	return nil
 }
 
-func CloseMongo(ctx context.Context) {
+func Close(ctx context.Context) {
 	for _, client := range Clients {
 		if err := client.Disconnect(ctx); err != nil {
 			fmt.Println("CloseMongo Err:", err)

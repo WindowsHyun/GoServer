@@ -6,6 +6,11 @@ import (
 )
 
 // "CollectionName": {DatabaseLocation, "DatabaseName", "CollectionName", []string{"HashKey"}, define.IndexTypeSingle},
-var CollectionInfos = map[string]structure.CollectionInfo{
+var MongoCollectionInfos = map[string]structure.MongoCollectionInfo{
 	"UserInfo": {define.DBCommon, "User", "info", []string{"email"}, define.IndexTypeSingle},
+}
+
+var MySQLCollectionInfos = map[string]structure.MySQLCollectionInfo{
+	"UserTable": {"user_table"},
+	"Menu":      {"menu"},
 }

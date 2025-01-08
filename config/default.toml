@@ -35,6 +35,32 @@ Host = "mongodb://192.168.6.16:27017"
 User = "windowshyun"
 Pass = "hyun!"
 
+[mysql]
+[mysql.local]
+Host = "localhost"
+User = "windowshyun"
+Pass = "hyun!"
+Port = "3306"
+DB = "history"
+
+[mysql.develop]
+Host = "192.168.6.16"
+User = "windowshyun"
+Pass = "hyun!"
+Port = "3306"
+DB = "history"
+
+[redis]
+[redis.local]
+host = "localhost"
+port = "6379"
+pass = "hyun!"
+
+[redis.develop]
+host = "192.168.6.16"
+port = "6379"
+pass = "hyun!"
+
 [log]
 level = "debug" # debug or info
 fpath = "./logs" # 로그가 생성될 경로 : ./logs

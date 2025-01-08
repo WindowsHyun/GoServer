@@ -6,10 +6,12 @@ import (
 
 type Config struct {
 	Server    structure.Server
-	Mongo     structure.MongoMap
 	Log       structure.Log
 	ENV       structure.ENV
 	SecretKey structure.SecretKey
+	Mongo     structure.MongoMap
+	Mysql     structure.MySQLMap
+	Redis     structure.RedisMap
 }
 
 func (c *Config) GetTarget() string {
@@ -48,6 +50,37 @@ func (c *Config) SetMongo(targetDB string, config structure.MongoConfig) {
 	envTarget := c.GetTarget()
 
 	c.Mongo[envTarget][targetDB] = config
+}
+
+func (c *Config) GetMySQL() structure.MySQLConfig {
+	envTg := c.GetTarget()
+
+	mySQLConfig, envExists := c.Mysql[envTg]
+	if !envExists {
+		return structure.MySQLConfig{}
+	}
+
+	return mySQLConfig
+}
+
+func (c *Config) SetMySQL(config structure.MySQLConfig) {
+	envTg := c.GetTarget()
+	c.Mysql[envTg] = config
+}
+
+func (c *Config) SetRedis(config structure.RedisConfig) {
+	envTg := c.GetTarget()
+	c.Redis[envTg] = config
+}
+
+func (c *Config) GetRedis() structure.RedisConfig {
+	envTg := c.GetTarget()
+	redis, envExists := c.Redis[envTg]
+	if !envExists {
+		return structure.RedisConfig{}
+	}
+
+	return redis
 }
 
 func (c *Config) GetLog() structure.Log {

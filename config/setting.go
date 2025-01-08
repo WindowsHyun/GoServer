@@ -44,9 +44,11 @@ func DefaultLoadConfig(path string) *Config {
 	return &Config{
 		Server:    c.Server,
 		Log:       c.Log,
-		Mongo:     c.Mongo,
 		ENV:       c.ENV,
 		SecretKey: c.SecretKey,
+		Mongo:     c.Mongo,
+		Mysql:     c.Mysql,
+		Redis:     c.Redis,
 	}
 }
 
