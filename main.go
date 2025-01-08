@@ -55,11 +55,14 @@ func main() {
 	}
 
 	// Initialize handlers
-	userHandler := handler.NewUserHandler(usecase)
-	appHandler := handler.NewAppHandler(usecase)
+	handler, err := handler.InitHandler(cf, usecase)
+	if err != nil {
+		logger.LogPanic(ctx, "Failed to initialize handler: %v", err)
+		return
+	}
 
 	// Set up router
-	r := router.SetupRouter(userHandler, appHandler)
+	r := router.SetupRouter(handler)
 
 	// Start the server
 	err = r.Run(":" + cf.GetServer().Port)

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"GoServer/usecase"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,10 +16,14 @@ type userHandler struct {
 	userUsecase usecase.UserUsecase
 }
 
-func NewUserHandler(usecase *usecase.Usecase) UserHandler {
-	return &userHandler{
-		userUsecase: usecase.UserUsecase,
+func NewUserHandler(userUsecase usecase.UserUsecase) (UserHandler, error) {
+	if userUsecase == nil {
+		return nil, fmt.Errorf("userUsecase is nil")
 	}
+
+	return &userHandler{
+		userUsecase: userUsecase,
+	}, nil
 }
 
 func (h *userHandler) Register(c *gin.Context) {

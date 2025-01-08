@@ -2,6 +2,7 @@ package handler
 
 import (
 	"GoServer/usecase"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,10 +15,14 @@ type AppHandler interface {
 	GetMenu(c *gin.Context)
 }
 
-func NewAppHandler(usecase *usecase.Usecase) AppHandler {
-	return &appHandler{
-		appUsecase: usecase.AppUsecase,
+func NewAppHandler(appUsecase usecase.AppUsecase) (AppHandler, error) {
+	if appUsecase == nil {
+		return nil, fmt.Errorf("appUsecase is nil")
 	}
+
+	return &appHandler{
+		appUsecase: appUsecase,
+	}, nil
 }
 
 func (a *appHandler) GetMenu(c *gin.Context) {
