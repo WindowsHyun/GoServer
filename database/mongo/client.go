@@ -46,7 +46,8 @@ func Initialize(ctx context.Context, config *config.Config) (map[string]MongoInt
 
 		for key, colInfo := range database.MongoCollectionInfos {
 			if colInfo.DatabaseLocation == fieldKey {
-				client, err := initializeMongoClient(ctx, colInfo.DatabaseName, cfg.Host, credential)
+				databaseLocation := fmt.Sprintf("%d", colInfo.DatabaseLocation)
+				client, err := initializeMongoClient(ctx, colInfo.DatabaseName, databaseLocation, cfg.Host, credential)
 				if err != nil {
 					return nil, errors.Wrap(err, "initialize Mongo Client")
 				}
@@ -83,8 +84,9 @@ func CreateDBRepository(ctx context.Context, client *mongo.Client, databaseName 
 	return repo, nil
 }
 
-func initializeMongoClient(ctx context.Context, dbName, uri string, credential options.Credential) (*mongo.Client, error) {
-	if client, exists := mongoClients[dbName]; exists {
+func initializeMongoClient(ctx context.Context, dbName, dbLocation, uri string, credential options.Credential) (*mongo.Client, error) {
+	key := fmt.Sprintf("%s_%s", dbLocation, dbName)
+	if client, exists := mongoClients[key]; exists {
 		return client, nil
 	}
 
@@ -98,7 +100,7 @@ func initializeMongoClient(ctx context.Context, dbName, uri string, credential o
 		return nil, errors.Wrap(err, "MongoDB connection failed")
 	}
 
-	mongoClients[dbName] = client
+	mongoClients[key] = client
 	return client, nil
 }
 
