@@ -25,6 +25,16 @@ func NewAppHandler(appUsecase usecase.AppUsecase) (AppHandler, error) {
 	}, nil
 }
 
+// App
+// @Summary
+// @Description App Menu
+// @Tags App
+// @Accept json
+// @Produce json
+// @Success 200 {object} structure.ResDefaultMessage
+// @Failure 400 "Bad Request Error"
+// @Router /app/menu [get]
+// @Param Authorization header string true "Insert your access token" default(Bearer <Add access token here>)
 func (a *appHandler) GetMenu(c *gin.Context) {
 
 }

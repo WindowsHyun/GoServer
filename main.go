@@ -62,7 +62,7 @@ func main() {
 	}
 
 	// Set up router
-	r := router.SetupRouter(handler)
+	r := router.SetupRouter(cf, handler)
 
 	// Start the server
 	err = r.Run(":" + cf.GetServer().Port)

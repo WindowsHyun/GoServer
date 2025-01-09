@@ -1,0 +1,115 @@
+definitions:
+  structure.ReqLogin:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  structure.ReqRegist:
+    properties:
+      birthMonth:
+        type: string
+      birthYear:
+        type: string
+      email:
+        type: string
+      nickName:
+        type: string
+    type: object
+  structure.ResDefaultMessage:
+    properties:
+      msg:
+        type: string
+    type: object
+  structure.ResLogin:
+    properties:
+      msg:
+        type: string
+      token:
+        type: string
+    type: object
+  structure.ResRegist:
+    properties:
+      msg:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /app/menu:
+    get:
+      consumes:
+      - application/json
+      description: App Menu
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/structure.ResDefaultMessage'
+        "400":
+          description: Bad Request Error
+      tags:
+      - App
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: User Login
+      parameters:
+      - description: User login request body
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/structure.ReqLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/structure.ResLogin'
+        "400":
+          description: Bad Request Error
+      tags:
+      - User
+  /user/regist:
+    post:
+      consumes:
+      - application/json
+      description: User Regist
+      parameters:
+      - description: User registration request body
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/structure.ReqRegist'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/structure.ResRegist'
+        "400":
+          description: Bad Request Error
+        "502":
+          description: Could Not Be Searched In DB Collection
+        "506":
+          description: DB Collection Update Error
+        "509":
+          description: JWT Token Error
+      tags:
+      - User
+swagger: "2.0"

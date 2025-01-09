@@ -31,24 +31,25 @@ func SettingConfig(target string) *Config {
 }
 
 func DefaultLoadConfig(path string) *Config {
-	c := new(Config)
-	if file, err := os.Open(path); err != nil {
+	c := new(ReflectionConfig)
+	file, err := os.Open(path)
+	if err != nil {
 		panic(err)
-	} else {
-		defer file.Close()
-		if err := toml.NewDecoder(file).Decode(c); err != nil {
-			panic(err)
-		}
+	}
+	defer file.Close()
+
+	if err := toml.NewDecoder(file).Decode(c); err != nil {
+		panic(err)
 	}
 
 	return &Config{
-		Server:    c.Server,
-		Log:       c.Log,
-		ENV:       c.ENV,
-		SecretKey: c.SecretKey,
-		Mongo:     c.Mongo,
-		Mysql:     c.Mysql,
-		Redis:     c.Redis,
+		server:    c.Server,
+		log:       c.Log,
+		env:       c.ENV,
+		secretKey: c.SecretKey,
+		mongo:     c.Mongo,
+		mysql:     c.MySQL,
+		redis:     c.Redis,
 	}
 }
 
