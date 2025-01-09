@@ -14,7 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var Clients []*mongo.Client
+var mongoClients = make(map[string]*mongo.Client)
 
 type MongoRepository struct {
 	Client         *mongo.Client
@@ -44,20 +44,13 @@ func Initialize(ctx context.Context, config *config.Config) (map[string]MongoInt
 			Password: cfg.Pass,
 		}
 
-		clientOptions := options.Client().ApplyURI(cfg.Host).SetAuth(credential)
-		client, err := mongo.Connect(ctx, clientOptions)
-		if err != nil {
-			return nil, errors.Wrap(err, "Failed mongo connect")
-		}
-
-		err = client.Ping(ctx, nil)
-		if err != nil {
-			return nil, errors.Unwrap(err)
-		}
-		Clients = append(Clients, client)
-
 		for key, colInfo := range database.MongoCollectionInfos {
 			if colInfo.DatabaseLocation == fieldKey {
+				client, err := initializeMongoClient(ctx, colInfo.DatabaseName, cfg.Host, credential)
+				if err != nil {
+					return nil, errors.Wrap(err, "initialize Mongo Client")
+				}
+
 				repo, err := CreateDBRepository(ctx, client, colInfo.DatabaseName, colInfo.CollectionName, colInfo.HashKey, colInfo.IndexType)
 				if err != nil {
 					return nil, errors.Wrap(err, "mongo repo failed")
@@ -88,6 +81,25 @@ func CreateDBRepository(ctx context.Context, client *mongo.Client, databaseName 
 		return nil, err
 	}
 	return repo, nil
+}
+
+func initializeMongoClient(ctx context.Context, dbName, uri string, credential options.Credential) (*mongo.Client, error) {
+	if client, exists := mongoClients[dbName]; exists {
+		return client, nil
+	}
+
+	clientOptions := options.Client().ApplyURI(uri).SetAuth(credential)
+	client, err := mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		return nil, errors.Wrap(err, "Failed to initialize MongoDB client")
+	}
+
+	if err := client.Ping(ctx, nil); err != nil {
+		return nil, errors.Wrap(err, "MongoDB connection failed")
+	}
+
+	mongoClients[dbName] = client
+	return client, nil
 }
 
 func CreateIndex(ctx context.Context, repo *MongoRepository) error {
@@ -139,10 +151,10 @@ func CreateIndex(ctx context.Context, repo *MongoRepository) error {
 }
 
 func Close(ctx context.Context) {
-	for _, client := range Clients {
+	for dbName, client := range mongoClients {
 		if err := client.Disconnect(ctx); err != nil {
-			fmt.Println("CloseMongo Err:", err)
+			fmt.Printf("Error closing MongoDB client (%s): %v\n", dbName, err)
 		}
 	}
-	Clients = nil
+	mongoClients = make(map[string]*mongo.Client) // 맵 초기화
 }

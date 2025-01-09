@@ -20,6 +20,13 @@ var MongoCollectionInfos = map[string]structure.MongoCollectionInfo{
 		HashKey:          []string{"name"},
 		IndexType:        define.IndexTypeSingle,
 	},
+	"UserPostBox": {
+		DatabaseLocation: define.DBCommon,
+		DatabaseName:     "User",
+		CollectionName:   "PostBox",
+		HashKey:          []string{},
+		IndexType:        define.IndexTypeSingle,
+	},
 }
 
 var MySQLCollectionInfos = map[string]structure.MySQLCollectionInfo{
