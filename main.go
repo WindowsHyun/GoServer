@@ -7,6 +7,7 @@ import (
 	"GoServer/database/redis"
 	"GoServer/handler"
 	"GoServer/logger"
+	"GoServer/middleware"
 	"GoServer/router"
 	"GoServer/usecase"
 	"context"
@@ -58,6 +59,13 @@ func main() {
 	handler, err := handler.InitHandler(cf, usecase)
 	if err != nil {
 		logger.LogPanic(ctx, "Failed to initialize handler: %v", err)
+		return
+	}
+
+	// Initialize middleware
+	err = middleware.Init(cf, redisRepo)
+	if err != nil {
+		logger.LogPanic(ctx, "Failed to initialize middleware: %v", err)
 		return
 	}
 

@@ -34,6 +34,7 @@ const (
 	RedisCacheDB   = "6"
 	RedisTempDB    = "7"
 	RedisBackupDB  = "8"
+	RedisSessionDB = "9"
 )
 
 const (
