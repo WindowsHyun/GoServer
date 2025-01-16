@@ -7,25 +7,22 @@ import (
 
 var MongoCollectionInfos = map[string]structure.MongoCollectionInfo{
 	"UserInfo": {
-		DatabaseLocation: define.DBCommon,
-		DatabaseName:     "User",
-		CollectionName:   "info",
-		HashKey:          []string{"email"},
-		IndexType:        define.IndexTypeSingle,
+		DatabaseName:   "User",
+		CollectionName: "info",
+		HashKey:        []string{"email"},
+		IndexType:      define.IndexTypeSingle,
 	},
 	"Menu": {
-		DatabaseLocation: define.DBCommon,
-		DatabaseName:     "Menu",
-		CollectionName:   "info",
-		HashKey:          []string{"name"},
-		IndexType:        define.IndexTypeSingle,
+		DatabaseName:   "Menu",
+		CollectionName: "info",
+		HashKey:        []string{"name"},
+		IndexType:      define.IndexTypeSingle,
 	},
 	"UserPostBox": {
-		DatabaseLocation: define.DBCommon,
-		DatabaseName:     "User",
-		CollectionName:   "PostBox",
-		HashKey:          []string{},
-		IndexType:        define.IndexTypeSingle,
+		DatabaseName:   "User",
+		CollectionName: "PostBox",
+		HashKey:        []string{},
+		IndexType:      define.IndexTypeSingle,
 	},
 }
 

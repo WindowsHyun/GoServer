@@ -47,26 +47,20 @@ func (c *Config) SetServer(server structure.Server) {
 	c.server = server
 }
 
-func (c *Config) GetMongo(targetDB string) structure.MongoConfig {
+func (c *Config) GetMongo() structure.MongoConfig {
 	envTarget := c.GetTarget()
 
-	mgInfoMap, envExists := c.mongo[envTarget]
+	mongoConfig, envExists := c.mongo[envTarget]
 	if !envExists {
-		return structure.MongoConfig{}
-	}
-
-	mongoConfig, dbExists := mgInfoMap[targetDB]
-	if !dbExists {
 		return structure.MongoConfig{}
 	}
 
 	return mongoConfig
 }
 
-func (c *Config) SetMongo(targetDB string, config structure.MongoConfig) {
+func (c *Config) SetMongo(config structure.MongoConfig) {
 	envTarget := c.GetTarget()
-
-	c.mongo[envTarget][targetDB] = config
+	c.mongo[envTarget] = config
 }
 
 func (c *Config) GetMySQL() structure.MySQLConfig {

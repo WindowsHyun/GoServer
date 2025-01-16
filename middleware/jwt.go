@@ -15,6 +15,7 @@ import (
 )
 
 var (
+	contextKey   = "session"
 	session      IRedis.RedisInterface
 	appSecretKey string
 )
@@ -64,7 +65,7 @@ func JWTMiddleware() gin.HandlerFunc {
 		}
 
 		// Check session in Redis
-		sessionKey := fmt.Sprintf("session:%s", tokenString)
+		sessionKey := fmt.Sprintf("session:%s", claims.Id)
 		var sessionValue string
 		err = session.Get(c.Request.Context(), sessionKey, &sessionValue)
 		if err != nil {
@@ -73,9 +74,7 @@ func JWTMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		c.Set("session", claims)
-		// Get Claims Code
-		// claims := c.MustGet("session").(*structure.Claims)
+		c.Set(contextKey, claims)
 		c.Next()
 	}
 }
@@ -97,8 +96,8 @@ func GenerateToken(ctx context.Context, userId, email string) (string, error) {
 	}
 
 	// Store session in Redis
-	sessionKey := fmt.Sprintf("session:%s", tokenString)
-	err = session.Set(ctx, sessionKey, userId, time.Hour*24)
+	sessionKey := fmt.Sprintf("session:%s", userId)
+	err = session.Set(ctx, sessionKey, tokenString, time.Hour*24)
 	if err != nil {
 		return "", err
 	}
@@ -109,4 +108,18 @@ func GenerateToken(ctx context.Context, userId, email string) (string, error) {
 func Logout(ctx context.Context, tokenString string) error {
 	sessionKey := fmt.Sprintf("session:%s", tokenString)
 	return session.Del(ctx, sessionKey)
+}
+
+func GetClaims(c *gin.Context) *structure.Claims {
+	value := c.Value(contextKey)
+	if value == nil {
+		return nil
+	}
+
+	claims, ok := value.(*structure.Claims)
+	if !ok {
+		return nil
+	}
+
+	return claims
 }

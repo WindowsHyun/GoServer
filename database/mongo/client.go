@@ -26,14 +26,14 @@ type MongoRepository struct {
 }
 
 func Initialize(ctx context.Context, config *config.Config) (map[string]MongoInterface, error) {
-	appSvrCfg := config.GetMongo(define.MongoApp)
-	apiSvrCfg := config.GetMongo(define.MongoApi)
-	commonSvrCfg := config.GetMongo(define.MongoCommon)
+	svrCgf := config.GetMongo()
 
-	fields := []struct{ Host, User, Pass string }{appSvrCfg, apiSvrCfg, commonSvrCfg}
+	fields := []struct{ Host, User, Pass string }{
+		{svrCgf.Host, svrCgf.User, svrCgf.Pass},
+	}
+
 	dbRepos := make(map[string]MongoInterface)
-
-	for fieldKey, cfg := range fields {
+	for _, cfg := range fields {
 		ctx := context.Background()
 		if cfg.Host == "" || cfg.User == "" || cfg.Pass == "" {
 			continue
@@ -45,19 +45,16 @@ func Initialize(ctx context.Context, config *config.Config) (map[string]MongoInt
 		}
 
 		for key, colInfo := range database.MongoCollectionInfos {
-			if colInfo.DatabaseLocation == fieldKey {
-				databaseLocation := fmt.Sprintf("%d", colInfo.DatabaseLocation)
-				client, err := initializeMongoClient(ctx, colInfo.DatabaseName, databaseLocation, cfg.Host, credential)
-				if err != nil {
-					return nil, errors.Wrap(err, "initialize Mongo Client")
-				}
-
-				repo, err := CreateDBRepository(ctx, client, colInfo.DatabaseName, colInfo.CollectionName, colInfo.HashKey, colInfo.IndexType)
-				if err != nil {
-					return nil, errors.Wrap(err, "mongo repo failed")
-				}
-				dbRepos[key] = repo
+			client, err := initializeMongoClient(ctx, colInfo.DatabaseName, cfg.Host, credential)
+			if err != nil {
+				return nil, errors.Wrap(err, "initialize Mongo Client")
 			}
+
+			repo, err := CreateDBRepository(ctx, client, colInfo.DatabaseName, colInfo.CollectionName, colInfo.HashKey, colInfo.IndexType)
+			if err != nil {
+				return nil, errors.Wrap(err, "mongo repo failed")
+			}
+			dbRepos[key] = repo
 		}
 	}
 
@@ -84,8 +81,8 @@ func CreateDBRepository(ctx context.Context, client *mongo.Client, databaseName 
 	return repo, nil
 }
 
-func initializeMongoClient(ctx context.Context, dbName, dbLocation, uri string, credential options.Credential) (*mongo.Client, error) {
-	key := fmt.Sprintf("%s_%s", dbLocation, dbName)
+func initializeMongoClient(ctx context.Context, dbName, uri string, credential options.Credential) (*mongo.Client, error) {
+	key := dbName
 	if client, exists := mongoClients[key]; exists {
 		return client, nil
 	}

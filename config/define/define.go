@@ -10,12 +10,6 @@ const (
 	IndexTypeCompound
 )
 
-const (
-	DBApp = iota
-	DBApi
-	DBCommon
-)
-
 // Mongo TargetDB
 const (
 	MongoApp    = "app"
